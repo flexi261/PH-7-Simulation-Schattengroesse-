@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Schattenlabor – Physik 7</title><style>
+:root{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;color:#182c43;background:#edf3f8}*{box-sizing:border-box}body{margin:0;padding:20px}main{max-width:1000px;margin:auto}.panel{background:white;border-radius:18px;padding:clamp(16px,3vw,28px);box-shadow:0 8px 28px #1b38531a}h1{margin:0 0 8px;font-size:clamp(24px,4vw,34px)}p{line-height:1.5;color:#43556a}.tag{font-size:13px;font-weight:700;letter-spacing:.07em;color:#246a8e;text-transform:uppercase}svg{display:block;width:100%;height:auto;background:#f8fbfe;border:1px solid #dce6ef;border-radius:14px;touch-action:none}input[type=range]{width:100%;accent-color:#197baf;min-height:44px}.controls{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:18px}.controls label{font-weight:650;flex:1 1 290px}button{font:inherit;border:1px solid #c6d8e6;background:#f4f9fc;color:#1c4c6c;border-radius:10px;padding:12px 16px;cursor:pointer;font-weight:650}button:focus-visible,input:focus-visible{outline:3px solid #ffbb4e;outline-offset:3px}.note{font-size:14px;color:#546679}.key{display:flex;flex-wrap:wrap;gap:18px;font-size:14px;margin:16px 0}.key span:before{content:'';display:inline-block;width:20px;height:4px;vertical-align:middle;margin-right:7px;background:var(--c)}.task{margin-top:18px;border-left:4px solid #2588b7;padding:10px 16px;background:#f0f7fb;border-radius:0 10px 10px 0}.task p{margin:6px 0}.footer{font-size:13px;margin-top:14px} @media(max-width:600px){body{padding:10px}.panel{border-radius:12px}.controls{gap:5px}button{width:100%}}
+
+/* iPad-Optimierung: Querformat, ohne die Physik-Berechnung zu verändern */
+@media (orientation: landscape) and (min-width: 700px) and (max-height: 1100px) {
+  body { padding: 10px 14px; }
+  main { max-width: 1500px; }
+  .panel { padding: 12px 18px; border-radius: 14px; }
+  h1 { font-size: clamp(22px, 2.7vw, 30px); margin-bottom: 3px; }
+  .tag { font-size: 11px; }
+  .panel > p:first-of-type { margin: 3px 0 9px; font-size: 14px; line-height: 1.3; }
+  svg { width: 100%; height: min(68vh, 650px); min-height: 210px; }
+  .key { margin: 8px 0; gap: 18px; font-size: 13px; }
+  .controls { margin-top: 5px; gap: 12px; flex-wrap: nowrap; }
+  .controls label { flex: 1 1 auto; font-size: 14px; }
+  input[type=range] { min-height: 44px; }
+  button { flex: 0 0 auto; padding: 11px 14px; min-height: 44px; }
+  .note { margin: 4px 0; font-size: 12px; line-height: 1.3; }
+  .task { margin-top: 7px; padding: 7px 12px; font-size: 13px; }
+  .task p { margin: 3px 0; line-height: 1.35; }
+  .footer { margin: 7px 0 0; font-size: 11px; line-height: 1.3; }
+}
+@media (orientation: landscape) and (min-width: 700px) and (max-height: 650px) {
+  svg { height: 62vh; min-height: 170px; }
+  .panel > p:first-of-type { font-size: 12px; }
+  .task { font-size: 12px; }
+}
+
+
+/* Aufklappbare Formulierungshilfe und Sprinterquiz */
+.header-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+.quiz-button{min-height:56px;white-space:nowrap;background:#fff0d5;border:2px solid #e7ad56;color:#734608;padding:13px 19px;font-size:17px;display:inline-flex;align-items:center;gap:9px}
+.quiz-overlay[hidden]{display:none}.quiz-overlay{position:fixed;inset:0;z-index:30;background:rgba(20,36,53,.55);display:flex;align-items:center;justify-content:center;padding:15px}
+.quiz-dialog{background:white;border-radius:16px;padding:22px;width:min(610px,100%);max-height:92dvh;overflow:auto;box-shadow:0 16px 50px #182c4355}
+.quiz-dialog h2{margin:0 0 8px;font-size:23px}.quiz-top{display:flex;align-items:start;justify-content:space-between;gap:12px}.quiz-close{padding:7px 12px;min-height:40px}
+.quiz-progress{font-size:14px;color:#51677c;font-weight:650;margin:12px 0}.quiz-question{font-size:19px;font-weight:700;line-height:1.4;margin:12px 0}
+.quiz-choices{display:grid;gap:9px}.quiz-choice{text-align:left;white-space:normal;min-height:50px;background:#f4f9fc;border:2px solid #d4e1eb;padding:12px 15px}
+.quiz-choice:disabled{opacity:1;cursor:default}.quiz-choice.correct{background:#e3f5e9;border-color:#39965b;color:#185c33}.quiz-choice.incorrect{background:#ffeded;border-color:#d75c5c;color:#8b2626}
+.quiz-feedback[hidden]{display:none}.quiz-feedback{padding:12px 14px;margin:13px 0;border-radius:10px;background:#edf5fb;line-height:1.45}.quiz-feedback strong{display:block;margin-bottom:4px}
+.quiz-footer{display:flex;justify-content:flex-end;gap:9px;margin-top:16px}.quiz-next{background:#236e99;color:#fff;border-color:#236e99}.quiz-next[hidden],.quiz-end[hidden],.quiz-body[hidden]{display:none}
+@media(max-width:650px){.header-row{flex-wrap:wrap}.header-actions{width:100%;justify-content:flex-start}.quiz-dialog{padding:16px}.quiz-button{font-size:16px;padding:10px 12px;min-height:48px}}
+
+.header-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.help-button{min-height:56px;white-space:nowrap;background:#e7f3fc;border:2px solid #87b6d2;color:#1c4c6c;padding:13px 19px;font-size:17px;display:inline-flex;align-items:center;justify-content:center;gap:9px}.help-button svg{width:22px;height:22px;flex-shrink:0}
+.help-overlay[hidden]{display:none}
+.help-overlay{position:fixed;inset:0;z-index:20;background:rgba(20,36,53,.45);display:flex;align-items:center;justify-content:center;padding:18px}
+.help-dialog{background:#fff;border-radius:16px;padding:22px;width:min(540px,100%);max-height:90dvh;overflow:auto;box-shadow:0 16px 50px #182c4355}
+.help-dialog h2{font-size:22px;margin:0 0 10px}
+.help-dialog p{margin:8px 0;line-height:1.45}
+.help-dialog ul{padding-left:23px;line-height:1.55;margin:8px 0 18px}
+.help-steps{padding-left:25px;line-height:1.5;margin:12px 0 18px}.help-steps li{padding-left:4px;margin:0 0 12px}.sentence-start{font-style:italic;color:#486176;margin:6px 0 0!important}.help-actions{display:flex;justify-content:flex-end}
+@media(max-width:600px){.header-row{align-items:flex-start}.help-button{width:auto;min-height:48px;padding:10px 12px;font-size:16px}.help-dialog{padding:16px}}
+/* Beide Kopfbuttons garantiert gleich hoch – auch im iPad-Querformat. */
+.header-actions > .quiz-button,
+.header-actions > .help-button {
+  box-sizing: border-box;
+  height: 52px;
+  min-height: 52px;
+  max-height: 52px;
+  padding: 0 15px;
+  font-size: 16px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  flex: 0 0 auto;
+}
+.header-actions > .help-button svg {width:20px;height:20px;min-width:20px;min-height:20px;max-height:20px;flex-shrink:0}
+</style></head><body><main><section class="panel"><div class="tag">Physik · Klasse 7 · Licht und Schatten</div><div class="header-row"><h1>Das Schattenlabor</h1><div class="header-actions"><button type="button" class="quiz-button" id="openQuiz" aria-haspopup="dialog">🚀 Sprinteraufgabe</button><button type="button" class="help-button" id="openHelp" aria-haspopup="dialog" aria-label="Formulierungshilfe öffnen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4M8.2 14.4C6.8 13.3 6 11.6 6 9.7a6 6 0 0 1 12 0c0 1.9-.8 3.6-2.2 4.7-.7.6-1.1 1.2-1.2 2.1H9.4c-.1-.9-.5-1.5-1.2-2.1Z"/><path d="M12 2V1M4.6 4.6l-.8-.8M19.4 4.6l.8-.8M3 10H2M22 10h-1"/></svg><span>Hilfe</span></button></div></div><p>Verschiebe das Hindernis (Maus) zwischen Lichtquelle und Schirm. Beobachte dabei die Randstrahlen und das Schattenbild.</p>
+<svg id="scene" viewBox="0 0 900 390" role="img" aria-label="Strahlengang mit einer punktförmigen Lichtquelle links, verschiebbarer Maus und Schirm rechts"><defs><pattern id="hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="8" stroke="#a6b4c2" stroke-width="1"/></pattern></defs><rect x="0" y="0" width="900" height="390" fill="#f8fbfe"/><rect x="0" y="0" width="807" height="390" fill="#fff5ce"/><polygon id="shadowSpace" fill="#737b85" opacity="1" points=""/><g id="rays" stroke="#e69a21" stroke-width="3" stroke-linecap="round"><line id="upper"/><line id="lower"/></g><rect x="807" y="0" width="9" height="390" fill="#6d8196"/><line id="shadow" x1="811" x2="811" stroke="#000000" stroke-width="12" stroke-linecap="butt"/><circle cx="90" cy="195" r="11" fill="#f5ba49" stroke="#bd7a14" stroke-width="3"/><g stroke="#e4a330" stroke-width="3"><path d="M90 169v-12M90 221v12M64 195H52M116 195h12M72 177l-9 -9M108 213l9 9M108 177l9 -9M72 213l-9 9"/></g><g id="mouse" fill="#3787ae" stroke="#195578" stroke-width="2"><rect id="obstacle" x="0" y="171" width="12" height="48" rx="4"/></g><g id="inlineLabels" font-family="system-ui,sans-serif" font-size="18" font-weight="650" pointer-events="none" style="paint-order:stroke;stroke:#fff5ce;stroke-width:5px;stroke-linejoin:round">
+<text id="rayLabel" fill="#a76608" text-anchor="middle">Randstrahl</text>
+<text id="spaceLabel" fill="#385d7d" text-anchor="middle">Schattenraum</text>
+<path d="M 760 273 L 801 219" fill="none" stroke="#314e70" stroke-width="2" style="stroke:#314e70"/>
+<text x="749" y="284" fill="#314e70" text-anchor="end">Schattenbild</text>
+</g><g fill="#283d52" font-size="19" font-family="system-ui,sans-serif"><text x="120" y="143" text-anchor="start" font-weight="650">Lichtquelle</text><text id="mouseLabel" y="259" text-anchor="middle" font-size="17"><tspan id="mouseLabelLine1">Hindernis</tspan><tspan id="mouseLabelLine2" x="0" dy="21">(Maus)</tspan></text><text x="844" y="376" text-anchor="start">Schirm</text></g></svg>
+
+<div class="controls"><label for="position">Abstand zwischen Lichtquelle und Hindernis <input id="position" type="range" min="15" max="92" value="48" step="1"></label><button id="reset" type="button">Ausgangsposition</button></div>
+</section></main>
+<div class="help-overlay" id="helpOverlay" hidden>
+  <section class="help-dialog" role="dialog" aria-modal="true" aria-labelledby="helpTitle" aria-describedby="helpIntro">
+    <h2 id="helpTitle">Formulierungshilfe zur Erklärung</h2>
+    <p id="helpIntro">Nutze die Hinweise und Satzanfänge für deine Erklärung.</p>
+    <ol class="help-steps">
+      <li>Licht breitet sich immer geradlinig aus.</li>
+      <li>Die Randstrahlen begrenzen …</li>
+      <li>Betrachte den Winkel zwischen den Randstrahlen.<p class="sentence-start">„Wenn das Hindernis näher an der Lichtquelle steht, …“</p></li>
+      <li>Achte darauf, wo die Randstrahlen auf den Schirm treffen und was mit dem Schattenbild passiert.<p class="sentence-start">„Dadurch …“</p></li>
+    </ol>
+    <div class="help-actions"><button type="button" id="closeHelp">Hilfe schließen ✕</button></div>
+  </section>
+</div>
+
+<div class="quiz-overlay" id="quizOverlay" hidden>
+  <section class="quiz-dialog" role="dialog" aria-modal="true" aria-labelledby="quizTitle">
+    <div class="quiz-top"><div><h2 id="quizTitle">🚀 Sprinteraufgabe</h2><p style="margin:0">Entdecke neue Situationen rund um Licht und Schatten!</p></div><button type="button" class="quiz-close" id="closeQuiz" aria-label="Quiz schließen">✕</button></div>
+    <div class="quiz-body" id="quizBody"><div class="quiz-progress" id="quizProgress" aria-live="polite"></div><div class="quiz-question" id="quizQuestion"></div><div class="quiz-choices" id="quizChoices"></div><div class="quiz-feedback" id="quizFeedback" aria-live="polite" hidden></div><div class="quiz-footer"><button type="button" class="quiz-next" id="quizNext" hidden>Nächste Frage →</button></div></div>
+    <div class="quiz-end" id="quizEnd" hidden><h3 id="quizResult"></h3><p id="quizResultText"></p><div class="quiz-footer"><button type="button" id="quizRestart">Noch einmal spielen ↻</button><button type="button" id="quizFinish">Schließen</button></div></div>
+  </section>
+</div>
+<script>
+(()=>{'use strict';const slider=document.getElementById('position'),mouse=document.getElementById('mouse'),obstacle=document.getElementById('obstacle'),mouseLabelLine2=document.getElementById('mouseLabelLine2'),upper=document.getElementById('upper'),lower=document.getElementById('lower'),shadow=document.getElementById('shadow'),space=document.getElementById('shadowSpace'),label=document.getElementById('mouseLabel'),scene=document.getElementById('scene'),rayLabel=document.getElementById('rayLabel'),spaceLabel=document.getElementById('spaceLabel');const sx=90,sy=195,screen=811,top=171,bottom=219;/* Bei 15 % Abstand liegt die Schattengrenze innerhalb des 390px hohen Schirms. */function draw(){const p=Number(slider.value)/100,x=sx+p*(screen-sx),factor=(screen-sx)/(x-sx),yt=sy+(top-sy)*factor,yb=sy+(bottom-sy)*factor;obstacle.setAttribute('x',x-6);label.setAttribute('x',x);mouseLabelLine2.setAttribute('x',x);upper.setAttribute('x1',sx);upper.setAttribute('y1',sy);upper.setAttribute('x2',screen);upper.setAttribute('y2',yt);lower.setAttribute('x1',sx);lower.setAttribute('y1',sy);lower.setAttribute('x2',screen);lower.setAttribute('y2',yb);shadow.setAttribute('y1',yt);shadow.setAttribute('y2',yb);space.setAttribute('points',`${x},${top} ${screen},${yt} ${screen},${yb} ${x},${bottom}`);const rx=500;rayLabel.setAttribute('x',rx);rayLabel.setAttribute('y',Math.max(28,sy+(top-sy)*(rx-sx)/(x-sx)-17));spaceLabel.setAttribute('x',Math.min(770,(x+screen)/2));spaceLabel.setAttribute('y',195)}slider.addEventListener('input',draw);document.getElementById('reset').addEventListener('click',()=>{slider.value=48;draw()});let dragging=false;function updateFromPointer(e){const pt=scene.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;const matrix=scene.getScreenCTM();if(!matrix)return;const q=pt.matrixTransform(matrix.inverse());slider.value=Math.max(15,Math.min(92,Math.round((q.x-sx)/(screen-sx)*100)));draw()}scene.addEventListener('pointerdown',e=>{const rect=scene.getBoundingClientRect();if(!rect)return;dragging=true;scene.setPointerCapture(e.pointerId);updateFromPointer(e)});scene.addEventListener('pointermove',e=>{if(dragging)updateFromPointer(e)});scene.addEventListener('pointerup',()=>dragging=false);scene.addEventListener('pointercancel',()=>dragging=false);draw();
+const openHelp=document.getElementById('openHelp'),closeHelp=document.getElementById('closeHelp'),helpOverlay=document.getElementById('helpOverlay');
+function showHelp(){helpOverlay.hidden=false;closeHelp.focus()}
+function hideHelp(){helpOverlay.hidden=true;openHelp.focus()}
+openHelp.addEventListener('click',showHelp);
+closeHelp.addEventListener('click',hideHelp);
+helpOverlay.addEventListener('click',e=>{if(e.target===helpOverlay)hideHelp()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!helpOverlay.hidden)hideHelp()});
+const quizQuestions=[{"question":"Das Hindernis bleibt stehen. Der Schirm wird weiter von der Lichtquelle entfernt. Was passiert mit dem Schattenbild?","choices":["Es wird größer.","Es wird kleiner.","Es bleibt gleich groß."],"answer":0,"why":"Die Randstrahlen laufen weiter auseinander. Auf dem weiter entfernten Schirm ist ihr Abstand größer. Der Winkel zwischen den Randstrahlen bleibt dabei gleich."},{"question":"Du schiebst den Schirm näher an das Hindernis, ohne die anderen Teile zu bewegen. Was passiert?","choices":["Das Schattenbild wandert nach oben.","Das Schattenbild wird kleiner.","Das Schattenbild wird größer."],"answer":1,"why":"Auf dem näheren Schirm treffen die Randstrahlen in geringerem Abstand auf. Deshalb wird das Schattenbild kleiner."},{"question":"Du tauschst das Hindernis gegen ein größeres aus. Alle Abstände bleiben gleich. Was passiert?","choices":["Das Schattenbild wird größer.","Das Schattenbild wird kleiner.","Die Größe bleibt gleich."],"answer":0,"why":"Ein größeres Hindernis verdeckt mehr Licht. Die Randstrahlen verlaufen weiter auseinander und begrenzen ein größeres Schattenbild."},{"question":"Eine kleine Maus und ein größerer Elefant sollen auf demselben Schirm gleich große Schattenbilder erzeugen. Welche Anordnung kann funktionieren?","choices":["Die Maus steht näher an der Lichtquelle als der Elefant.","Der Elefant steht näher an der Lichtquelle als die Maus.","Beide stehen gleich weit von der Lichtquelle entfernt."],"answer":0,"why":"Die kleinere Maus kann durch ihre größere Entfernung vom Schirm stärker vergrößert werden. So kann ihr Schattenbild genauso groß wie das des Elefanten werden."},{"question":"Du verwendest zwei nebeneinanderstehende punktförmige Lichtquellen statt einer. Was kann hinter einem Hindernis auf dem Schirm entstehen?","choices":["Zwei seitlich versetzte Schattenbilder.","Nur ein einziges Schattenbild an derselben Stelle.","Überhaupt kein Schattenbild mehr."],"answer":0,"why":"Jede punktförmige Lichtquelle erzeugt ihr eigenes Schattenbild. Die beiden Schattenbilder können sich auch überlappen."},{"question":"Du schiebst das Hindernis seitlich nach oben, ohne seinen Abstand zur Lichtquelle zu verändern. Was passiert mit dem Schattenbild?","choices":["Es verschiebt sich nach unten.","Es verschiebt sich nach oben.","Es bleibt an derselben Stelle."],"answer":1,"why":"Die Randstrahlen verlaufen nun an der höher liegenden Position des Hindernisses vorbei. Deshalb verschiebt sich auch sein Schattenbild nach oben."},{"question":"Du ersetzt das undurchsichtige Hindernis durch eine gleich große, vollkommen durchsichtige Scheibe. Was passiert bei idealer Lichtdurchlässigkeit?","choices":["Es entsteht ein gleich dunkles Schattenbild.","Es entsteht kein dunkles Schattenbild.","Das Schattenbild wird doppelt so groß."],"answer":1,"why":"Durch die ideal durchsichtige Scheibe gelangt das Licht hindurch. Sie blockiert das Licht nicht wie das undurchsichtige Hindernis."},{"question":"Das Hindernis und der Schirm bleiben stehen. Du verschiebst die punktförmige Lichtquelle seitlich nach oben. Wohin wandert das Schattenbild?","choices":["Nach oben.","Es bleibt an derselben Stelle.","Nach unten."],"answer":2,"why":"Von der höher stehenden Lichtquelle verlaufen die Strahlen schräger am Hindernis vorbei. Das Schattenbild verschiebt sich in die entgegengesetzte Richtung, also nach unten."},{"question":"Zwei undurchsichtige Hindernisse stehen hintereinander zwischen einer punktförmigen Lichtquelle und einem Schirm. Das vordere Hindernis verdeckt das hintere aus Sicht der Lichtquelle vollständig. Was siehst du auf dem Schirm?","choices":["Immer zwei getrennte Schattenbilder.","Ein gemeinsames Schattenbild, dessen Umriss vom vorderen Hindernis bestimmt wird.","Gar keinen Schatten, weil sich die Hindernisse verdecken."],"answer":1,"why":"Wenn das hintere Hindernis vollständig im Schattenraum des vorderen liegt, hält es kein zusätzliches Licht auf. Deshalb verändert es den Schattenumriss nicht."}];
+const openQuiz=document.getElementById('openQuiz'),closeQuiz=document.getElementById('closeQuiz'),quizOverlay=document.getElementById('quizOverlay'),quizBody=document.getElementById('quizBody'),quizEnd=document.getElementById('quizEnd'),quizProgress=document.getElementById('quizProgress'),quizQuestion=document.getElementById('quizQuestion'),quizChoices=document.getElementById('quizChoices'),quizFeedback=document.getElementById('quizFeedback'),quizNext=document.getElementById('quizNext');
+let quizIndex=0,quizScore=0,answered=false;
+function showQuestion(){answered=false;const q=quizQuestions[quizIndex];quizProgress.textContent=`Frage ${quizIndex+1} von ${quizQuestions.length}`;quizQuestion.textContent=q.question;quizChoices.replaceChildren();quizFeedback.hidden=true;quizFeedback.textContent='';quizNext.hidden=true;q.choices.forEach((choice,i)=>{const btn=document.createElement('button');btn.type='button';btn.className='quiz-choice';btn.textContent=String.fromCharCode(65+i)+'. '+choice;btn.addEventListener('click',()=>answerQuestion(i));quizChoices.appendChild(btn)});quizNext.textContent=quizIndex===quizQuestions.length-1?'Ergebnis ansehen →':'Nächste Frage →'}
+function answerQuestion(i){if(answered)return;answered=true;const q=quizQuestions[quizIndex],correct=i===q.answer;if(correct)quizScore++;[...quizChoices.children].forEach((b,j)=>{b.disabled=true;if(j===q.answer)b.classList.add('correct');else if(j===i)b.classList.add('incorrect')});const heading=document.createElement('strong');heading.textContent=correct?'✓ Richtig!':'✕ Noch nicht richtig.';const explanation=document.createElement('span');explanation.textContent=q.why;quizFeedback.replaceChildren(heading,explanation);quizFeedback.hidden=false;quizNext.hidden=false;quizNext.focus()}
+function finishQuiz(){quizBody.hidden=true;quizEnd.hidden=false;document.getElementById('quizResult').textContent=`${quizScore} von ${quizQuestions.length} richtig!`;document.getElementById('quizResultText').textContent=quizScore===quizQuestions.length?'Super! Du kannst die Schattenbildung sicher erklären.':'Gut geübt! Schau dir die Erklärungen an und probiere das Quiz gerne noch einmal.';document.getElementById('quizRestart').focus()}
+function startQuiz(){quizIndex=0;quizScore=0;quizBody.hidden=false;quizEnd.hidden=true;showQuestion()}
+function showQuiz(){if(!helpOverlay.hidden)hideHelp();quizOverlay.hidden=false;startQuiz();closeQuiz.focus()}
+function hideQuiz(){quizOverlay.hidden=true;openQuiz.focus()}
+openQuiz.addEventListener('click',showQuiz);closeQuiz.addEventListener('click',hideQuiz);document.getElementById('quizFinish').addEventListener('click',hideQuiz);document.getElementById('quizRestart').addEventListener('click',startQuiz);
+quizNext.addEventListener('click',()=>{if(!answered)return;quizIndex++;if(quizIndex===quizQuestions.length)finishQuiz();else showQuestion()});quizOverlay.addEventListener('click',e=>{if(e.target===quizOverlay)hideQuiz()});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!quizOverlay.hidden)hideQuiz()});
+})();
+</script></body></html>
